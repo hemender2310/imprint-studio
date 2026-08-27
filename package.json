@@ -1,0 +1,27 @@
+{
+  "name": "imprint",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "generate:frames": "python scripts/generate_frames.py",
+    "generate:boards": "node scripts/generate-boards.mjs",
+    "generate:monograms": "node scripts/generate-monograms.mjs"
+  },
+  "dependencies": {
+    "framer-motion": "^11.18.0",
+    "lenis": "^1.1.0",
+    "next": "^15.5.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "puppeteer": "^24.0.0",
+    "typescript": "^5.7.0"
+  }
+}

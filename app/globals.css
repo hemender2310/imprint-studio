@@ -1,0 +1,190 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Lenis smooths scrolling; native smooth behaviour fights it. */
+  scroll-behavior: auto;
+}
+
+body {
+  background: #f2eee6;
+  color: #17150f;
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  /* `clip` rather than `hidden`: `hidden` makes the element a scroll container,
+     which is the usual way `position: sticky` silently stops working. */
+  overflow-x: clip;
+}
+
+/* The custom cursor replaces the native one everywhere, not only over interactive
+   elements — otherwise the native arrow shows through over body copy and surfaces. */
+body,
+a,
+button {
+  cursor: none;
+}
+
+/* Restore the native cursor wherever the custom one is not rendered. Without the
+   reduced-motion case, those users get no visible cursor at all. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  body,
+  a,
+  button {
+    cursor: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    /* Required. Without it an `infinite` animation (the industries marquee) loops
+       ~100k times a second instead of stopping. */
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* No border-radius and no shadows anywhere in this design, so focus has to be an
+   outline or it is simply invisible. */
+:focus-visible {
+  outline: 2px solid #0090c1;
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #0090c1;
+  color: #f2eee6;
+}
+
+/* The industries marquee is driven in JS now (scroll-velocity coupled), so it carries no
+   CSS animation — a keyframe loop would fight the transform written each frame. */
+
+/* ── Services rows ──────────────────────────────────────────────────────── */
+.svc-row { transition: background-color .4s ease; }
+.svc-row:hover { background-color: #E4DED1; }
+.svc-name { transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.svc-row:hover .svc-name { transform: translateX(12px); }
+
+/* ── Work tiles ─────────────────────────────────────────────────────────── */
+/* Not fully desaturated at rest: the grid is the one place a visitor sees how this studio
+   handles other people's colour, and grayscale(1) turned six palettes into six dark cards. */
+.tile-img {
+  filter: grayscale(0.25);
+  transform: scale(1);
+  transition: filter .5s ease, transform .5s cubic-bezier(.16,1,.3,1);
+}
+.tile:hover .tile-img { filter: grayscale(0); transform: scale(1.04); }
+
+
+/* ── Responsive: stack everything below 768px ───────────────────────────── */
+/* Below 768 everything stacks, the gallery included: a 6-column asymmetric grid at 375px is
+   six slivers, and a 1.25fr/1fr pair is two. */
+@media (max-width: 767px) {
+  .gallery-pair,
+  .gallery-grid { grid-template-columns: 1fr !important; }
+  .gallery-grid > * { grid-column: 1 / -1 !important; align-self: auto !important; }
+}
+
+@media (max-width: 767px) {
+  .svc-row,
+  .plate-row,
+  .editorial-row { grid-template-columns: 1fr !important; }
+  .work-grid { grid-template-columns: 1fr !important; }
+  .editorial-row { gap: 0.75rem !important; }
+}
+@media (min-width: 768px) and (max-width: 1079px) {
+  .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+
+/* Case-study hero: letterboxed rather than cropped. A 16/10 cover crop of a 4:5 board
+   would cut the wordmark off the baseline-anchored layouts entirely. */
+.case-hero { position: relative; aspect-ratio: 4 / 5; background: #F2EEE6; }
+@media (min-width: 768px) { .case-hero { aspect-ratio: 16 / 10; } }
+
+/* ── Next-project link: board 01 of the next project behind it on hover ──── */
+.next-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .5s ease;
+  pointer-events: none;
+}
+.next-link:hover .next-bg { opacity: 0.12; }
+.next-name { transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.next-link:hover .next-name { transform: translateX(14px); }
+
+/* ── 404 slug links ─────────────────────────────────────────────────────── */
+.slug-link { border-bottom: 1px solid transparent; transition: border-color .3s ease, color .3s ease; }
+.slug-link:hover { color: #0090C1; border-bottom-color: #0090C1; }
+
+/* ── 404 slug links ─────────────────────────────────────────────────────── */
+.nf-slug { transition: color .3s ease; }
+.nf-slug:hover { color: #0090C1; }
+
+/* ── Menu overlay ───────────────────────────────────────────────────────── */
+.menu-name { display: inline-block; transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.menu-row:hover .menu-name { transform: translateX(14px); }
+.menu-section { transition: color .3s ease; }
+.menu-section:hover { color: #0090C1; }
+
+/* ── Contact block ──────────────────────────────────────────────────────── */
+.contact-mail { transition: color .3s ease; }
+.contact-mail:hover { color: #0090C1; }
+@media (max-width: 767px) {
+  .contact-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Skip link ──────────────────────────────────────────────────────────── */
+/* Visually hidden until focused. Not display:none — that would take it out of the tab order,
+   which is the one thing it exists for. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  transform: translateY(-120%);
+  transition: transform .2s ease;
+  background: #17150F;
+  color: #F2EEE6;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.9rem 1.6rem;
+}
+.skip-link:focus-visible,
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ── Intro panel: hidden before paint on repeat visits and under reduced motion ─── */
+[data-intro-seen='1'] [data-intro] { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  [data-intro] { display: none !important; }
+}

@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# IMPRINT — what does and does not go into the repository.
+#
+# The one rule that matters here: EVERYTHING UNDER public/ IS COMMITTED.
+#
+# The hero frames, the brand boards, the monogram tiles and the brand imagery are
+# generated locally by Python, Puppeteer and ffmpeg. None of those run on Vercel — the
+# deploy runs `next build` and nothing else. If any of public/ were ignored the build
+# would still succeed and the deployed site would have no imagery at all, which is the
+# worst kind of failure: silent.
+#
+# Note the leading slashes on /frames/ and /assets/. Without them those patterns match a
+# directory of that name at ANY depth, which would swallow public/frames — 180 files and
+# the entire hero sequence. Anchoring them to the root is what keeps that from happening,
+# and it cannot be undone by a later negation: git will not re-include a file inside an
+# ignored directory.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── dependencies and build output
+node_modules
+.next
+out
+next-env.d.ts
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# ── local working directories, anchored to the repo root so public/ is untouched
+/frames/
+/assets/
+/captures/
+/BRANDS/
+
+# ── generator scratch. Nothing writes into the repo today — record.mjs uses the system
+#    temp dir — but ad-hoc probe scripts get dropped in scripts/ during debugging.
+/scripts/_*
+/scripts/tmp/
+/scripts/out/
+
+# ── python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ── noise
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# ── local env. There are none today (see DEPLOY.md), but an accidental .env must never
+#    reach the repository.
+.env
+.env.*
+!.env.example
